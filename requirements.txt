@@ -1,0 +1,4 @@
+black
+python-dotenv
+requests
+types-requests
