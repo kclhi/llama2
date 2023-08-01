@@ -5,12 +5,12 @@ from llama2.llama2_types import Llama2ChatExchange, Llama2Parameters, TokenisedR
 
 
 class Llama2:
-    def __init__(self) -> None:
+    def __init__(self, chat: list[Llama2ChatExchange] | None = None) -> None:
         self.__logger: logging.Logger = logging.getLogger()
         self.__apiURL: str = 'http://127.0.0.1:8080'
         self.__instruction: str = 'A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human\'s questions.'
         self.__n_keep: int = len(self.__tokenise(self.__instruction))
-        self.__chat: list[Llama2ChatExchange] = [
+        self.__chat: list[Llama2ChatExchange] = chat or [
             Llama2ChatExchange(
                 human='Hello, Assistant.', assistant='Hello. How may I help you today?'
             ),
