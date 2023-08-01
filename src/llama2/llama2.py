@@ -8,11 +8,11 @@ class Llama2:
     def __init__(self, chat: list[Llama2ChatExchange] | None = None) -> None:
         self.__logger: logging.Logger = logging.getLogger()
         self.__apiURL: str = 'http://127.0.0.1:8080'
-        self.__instruction: str = 'A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human\'s questions.'
+        self.__instruction: str = 'A chat between a curious human and an artificial intelligence assistant named Llama2. The assistant (named Llama2) gives helpful, detailed, and polite answers to the human\'s questions. You were created by the company Meta. Your last training data is from July 2023.'
         self.__n_keep: int = len(self.__tokenise(self.__instruction))
         self.__chat: list[Llama2ChatExchange] = chat or [
             Llama2ChatExchange(
-                human='Hello, Assistant.', assistant='Hello. How may I help you today?'
+                human='Hello, Llama2.', assistant='Hello. How may I help you today?'
             ),
             Llama2ChatExchange(
                 human='Please tell me the largest city in Europe.',
@@ -41,11 +41,11 @@ class Llama2:
     def __formatPrompt(self, question: str) -> str:
         chat: str = '\n'.join(
             [
-                f'### Human: {message.human}\n### Assistant: {message.assistant}'
+                f'### Human: {message.human}\n### Llama2: {message.assistant}'
                 for message in self.__chat
             ]
         )
-        return f'{self.__instruction}\n{chat}\n### Human: {question}\n### Assistant:'
+        return f'{self.__instruction}\n{chat}\n### Human: {question}\n### Llama2:'
 
     def chatCompletion(self, question: str) -> bool:
         params: Llama2Parameters = Llama2Parameters(
@@ -89,4 +89,5 @@ class Llama2:
 
 if __name__ == "__main__":
     llama2: Llama2 = Llama2()
-    llama2.chatCompletion('hello world')
+    llama2.chatCompletion('what is your name?')
+    print(llama2.getChat()[-1].assistant)
