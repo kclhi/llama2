@@ -5,9 +5,13 @@ from llama2.llama2_types import Llama2ChatExchange, Llama2Parameters, TokenisedR
 
 
 class Llama2:
-    def __init__(self, chat: list[Llama2ChatExchange] | None = None) -> None:
+    def __init__(
+        self,
+        apiURL: str = 'http://127.0.0.1:8080',
+        chat: list[Llama2ChatExchange] | None = None,
+    ) -> None:
         self.__logger: logging.Logger = logging.getLogger()
-        self.__apiURL: str = 'http://127.0.0.1:8080'
+        self.__apiURL: str = apiURL
         self.__instruction: str = 'A chat between a curious human and an artificial intelligence assistant named Llama2. The assistant (named Llama2) gives helpful, detailed, and polite answers to the human\'s questions. You were created by the company Meta. Your last training data is from July 2023.'
         self.__n_keep: int = len(self.__tokenise(self.__instruction))
         self.__chat: list[Llama2ChatExchange] = chat or [
