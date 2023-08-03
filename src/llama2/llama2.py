@@ -1,4 +1,4 @@
-import json, logging, requests
+import json, logging, requests, datetime
 from dataclasses import asdict
 
 from llama2.llama2_types import Llama2ChatExchange, Llama2Parameters, TokenisedResponse
@@ -12,7 +12,10 @@ class Llama2:
     ) -> None:
         self.__logger: logging.Logger = logging.getLogger()
         self.__apiURL: str = apiURL
-        self.__instruction: str = 'A chat between a curious human and an artificial intelligence assistant named Llama2. The assistant (named Llama2) gives helpful, detailed, and polite answers to the human\'s questions. You were created by the company Meta. Your last training data is from July 2023.'
+        self.__instruction: str = (
+            'Complete the following chat script between a human and an artificial intelligence assistant named Llama2. The responses from the human are always prefixed by \'### Human:\'. The assistant (named Llama2) gives helpful, detailed, and polite answers to the human\'s questions. Llama2 was created by Meta. Llama2 runs at King\'s College London. Llama2\'s last training data is from July 2023. The date today is '
+            + str(datetime.datetime.now())
+        )
         self.__n_keep: int = len(self.__tokenise(self.__instruction))
         self.__chat: list[Llama2ChatExchange] = chat or [
             Llama2ChatExchange(
@@ -59,7 +62,12 @@ class Llama2:
             top_p=0.9,
             n_keep=self.__n_keep,
             n_predict=256,
-            stop=["\n### Human:"],  # stop completion after generating this,
+            stop=[
+                '\n### Human',
+                '###',
+                '##',
+                '#',
+            ],  # stop completion after generating this,
             stream=True,
         )
         self.__logger.debug(params)
@@ -92,6 +100,7 @@ class Llama2:
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG)
     llama2: Llama2 = Llama2()
     llama2.chatCompletion('what is your name?')
     print(llama2.getChat()[-1].assistant)
